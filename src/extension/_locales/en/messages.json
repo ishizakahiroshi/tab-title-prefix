@@ -1,0 +1,23 @@
+{
+  "extensionName": {
+    "message": "Tab Title Prefix"
+  },
+  "extensionDescription": {
+    "message": "Prefix tab titles by container (Firefox) or URL rules (Chrome, Phase 2)"
+  },
+  "optionsTitle": {
+    "message": "Tab Title Prefix — Settings"
+  },
+  "optionsEnabledLabel": {
+    "message": "Enable container prefix"
+  },
+  "optionsFormatLabel": {
+    "message": "Prefix format"
+  },
+  "optionsFormatHint": {
+    "message": "Use {name} as a placeholder for the container name."
+  },
+  "optionsSaved": {
+    "message": "Saved."
+  }
+}

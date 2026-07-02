@@ -1,0 +1,23 @@
+{
+  "extensionName": {
+    "message": "Tab Title Prefix"
+  },
+  "extensionDescription": {
+    "message": "コンテナ名（Firefox）や URL ルール（Chrome, Phase 2）でタブタイトルにプレフィックスを付ける"
+  },
+  "optionsTitle": {
+    "message": "Tab Title Prefix — 設定"
+  },
+  "optionsEnabledLabel": {
+    "message": "コンテナプレフィックスを有効化"
+  },
+  "optionsFormatLabel": {
+    "message": "プレフィックスの書式"
+  },
+  "optionsFormatHint": {
+    "message": "{name} はコンテナ名に置き換わるプレースホルダーです。"
+  },
+  "optionsSaved": {
+    "message": "保存しました。"
+  }
+}

@@ -1,32 +1,34 @@
 # Tab Title Prefix
 
-Firefox の Multi-Account Containers で複数アカウント（例: X の複数アカウント）を同時に開いていると、タブタイトルがすべて同じで見分けがつかない問題を解決するブラウザ拡張です。タブタイトルの先頭にコンテナ名を自動で差し込みます。
+A browser extension that solves the problem of indistinguishable tabs when using Firefox's Multi-Account Containers to keep multiple accounts (e.g. multiple X accounts) open at once. It automatically prepends the container name to the tab title.
 
-## 特徴
+[日本語版 README はこちら](README.ja.md)
 
-- **コンテナ連動が自動** — Multi-Account Containers のコンテナ名を検出し、タブタイトルの先頭に `[コンテナ名] ` を自動挿入します（手動設定不要）
-- SPA のルート遷移（例: X のタイムライン → プロフィール）でもプレフィックスを維持
-- デフォルトコンテナでは何もしない（既存の見た目を変えません）
-- ON/OFF トグル・プレフィックスのフォーマットを options 画面から変更可能
+## Features
 
-## 対応ブラウザ
+- **Automatic container linking** — detects the Multi-Account Containers name and automatically prepends `[container name] ` to the tab title (no manual setup required)
+- Keeps the prefix even after SPA route changes (e.g. X timeline → profile)
+- Does nothing in the default container (keeps the existing look unchanged)
+- ON/OFF toggle and prefix format can be changed from the options page
 
-- **Phase 1（現在）**: Firefox（Multi-Account Containers 前提）
-- **Phase 2（予定）**: Chrome 対応 + 手動 URL ルール機能
+## Supported Browsers
 
-## インストール
+- **Phase 1 (current)**: Firefox (requires Multi-Account Containers)
+- **Phase 2 (planned)**: Chrome support + manual URL rules
 
-<!-- TODO: AMO / Chrome Web Store への公開後、ここにリンクを追加 -->
+## Installation
 
-公開準備中です。ローカルビルド手順は以下を参照してください。
+<!-- TODO: add links here once published on AMO / Chrome Web Store -->
 
-## ローカルビルド・開発者向け
+Not yet published. See local build instructions below.
 
-1. このリポジトリをクローン
-2. Firefox で `about:debugging` を開く
-3. 「この Firefox」→「一時的なアドオンを読み込む」を選択
-4. `src/extension/manifest.json` を選択
+## Local Build / For Developers
 
-## ライセンス
+1. Clone this repository
+2. Open `about:debugging` in Firefox
+3. Select "This Firefox" → "Load Temporary Add-on…"
+4. Select `src/extension/manifest.json`
+
+## License
 
 [MIT](LICENSE)
