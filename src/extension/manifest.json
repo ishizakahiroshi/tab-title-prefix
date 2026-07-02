@@ -7,7 +7,7 @@
   "permissions": ["contextualIdentities", "cookies", "tabs", "storage"],
   "host_permissions": ["<all_urls>"],
   "background": {
-    "service_worker": "service_worker.js"
+    "scripts": ["service_worker.js"]
   },
   "content_scripts": [
     {
