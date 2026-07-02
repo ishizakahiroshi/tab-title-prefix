@@ -15,7 +15,9 @@ async function load() {
 
 async function save() {
   const enabled = document.getElementById("enabled").checked;
-  const format = document.getElementById("format").value || DEFAULT_FORMAT;
+  const formatInput = document.getElementById("format");
+  const format = formatInput.value || DEFAULT_FORMAT;
+  formatInput.value = format;
   await browser.storage.local.set({ enabled, format });
 
   const status = document.getElementById("status");

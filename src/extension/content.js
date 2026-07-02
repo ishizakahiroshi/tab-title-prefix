@@ -11,7 +11,8 @@
 
   function computePrefix(containerName, format) {
     if (!containerName) return "";
-    return format.replace("{name}", containerName);
+    // 置換関数を使う: コンテナ名に $& 等の特殊置換パターンが含まれても展開させない
+    return format.replace("{name}", () => containerName);
   }
 
   async function init() {

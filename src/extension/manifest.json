@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
-  "permissions": ["contextualIdentities", "cookies", "tabs", "storage"],
+  "permissions": ["contextualIdentities", "cookies", "storage"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "scripts": ["service_worker.js"]

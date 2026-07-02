@@ -11,6 +11,10 @@ A browser extension that solves the problem of indistinguishable tabs when using
 - Does nothing in the default container (keeps the existing look unchanged)
 - ON/OFF toggle and prefix format can be changed from the options page
 
+## Privacy Note
+
+The tab title is part of the page DOM, so **websites you visit can read the prefixed title** (including your container name) via `document.title`. If your container names contain sensitive words (e.g. a bank name), consider using neutral names or a custom prefix format.
+
 ## Supported Browsers
 
 - **Phase 1 (current)**: Firefox (requires Multi-Account Containers)
