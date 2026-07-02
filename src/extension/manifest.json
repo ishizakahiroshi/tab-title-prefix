@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Title Prefix",
+  "version": "0.1.0",
+  "description": "Prefix tab titles by container (Firefox) or URL rules (Chrome, Phase 2)",
+  "permissions": ["contextualIdentities", "cookies", "tabs", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "16": "img/icon16.png",
+    "32": "img/icon32.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "tab-title-prefix@ishizakahiroshi.dev"
+    }
+  }
+}
