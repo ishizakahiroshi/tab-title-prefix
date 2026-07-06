@@ -4,6 +4,8 @@ Firefox の Multi-Account Containers で複数アカウント（例: X の複数
 
 [English README is here](README.md)
 
+![タブタイトルの先頭にコンテナ名が自動でプレフィックスされている様子](docs/screenshots/demo-ja.png)
+
 ## 特徴
 
 - **コンテナ連動が自動** — Multi-Account Containers のコンテナ名を検出し、タブタイトルの先頭に `[コンテナ名] ` を自動挿入します（手動設定不要）
@@ -22,9 +24,10 @@ Firefox の Multi-Account Containers で複数アカウント（例: X の複数
 
 ## インストール
 
-<!-- TODO: AMO / Chrome Web Store への公開後、ここにリンクを追加 -->
+- **Firefox**: [Firefox Add-ons（AMO）からインストール](https://addons.mozilla.org/addon/tab-title-prefix/)
+- **Chrome**: 未対応（Phase 2 で対応予定）
 
-公開準備中です。ローカルビルド手順は以下を参照してください。
+ローカルビルド・開発者向けの手順は以下を参照してください。
 
 ## ローカルビルド・開発者向け
 

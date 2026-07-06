@@ -4,6 +4,8 @@ A browser extension that solves the problem of indistinguishable tabs when using
 
 [日本語版 README はこちら](README.ja.md)
 
+![Tab titles automatically prefixed with the container name](docs/screenshots/demo-en.png)
+
 ## Features
 
 - **Automatic container linking** — detects the Multi-Account Containers name and automatically prepends `[container name] ` to the tab title (no manual setup required)
@@ -22,9 +24,10 @@ The tab title is part of the page DOM, so **websites you visit can read the pref
 
 ## Installation
 
-<!-- TODO: add links here once published on AMO / Chrome Web Store -->
+- **Firefox**: [Get it on Firefox Add-ons (AMO)](https://addons.mozilla.org/addon/tab-title-prefix/)
+- **Chrome**: not yet supported (planned for Phase 2)
 
-Not yet published. See local build instructions below.
+For local/development builds, see below.
 
 ## Local Build / For Developers
 
