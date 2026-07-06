@@ -8,16 +8,103 @@
   "optionsTitle": {
     "message": "Tab Title Prefix — Settings"
   },
-  "optionsEnabledLabel": {
+  "optionsGlobalEnabledLabel": {
+    "message": "Enable tab title prefixes"
+  },
+  "optionsContainerSectionTitle": {
+    "message": "Firefox container prefix"
+  },
+  "optionsContainerEnabledLabel": {
     "message": "Enable container prefix"
   },
-  "optionsFormatLabel": {
-    "message": "Prefix format"
+  "optionsContainerTemplateLabel": {
+    "message": "Container prefix template"
   },
-  "optionsFormatHint": {
-    "message": "Use {name} as a placeholder for the container name."
+  "optionsContainerTemplateHint": {
+    "message": "Use {container} as a placeholder for the container name."
+  },
+  "optionsUrlRulesSectionTitle": {
+    "message": "URL rules"
+  },
+  "optionsUrlRulesEnabledLabel": {
+    "message": "Enable URL rules"
+  },
+  "optionsNoRules": {
+    "message": "No URL rules yet."
+  },
+  "optionsUseCurrentTabButton": {
+    "message": "Use current tab"
+  },
+  "optionsNewRuleMatchLabel": {
+    "message": "URL pattern"
+  },
+  "optionsNewRuleTemplateLabel": {
+    "message": "Prefix template"
+  },
+  "optionsRuleMatchPlaceholder": {
+    "message": "https://github.com/*"
+  },
+  "optionsRuleTemplatePlaceholder": {
+    "message": "[GH] "
+  },
+  "optionsAddRuleButton": {
+    "message": "Add rule"
+  },
+  "optionsUrlRulesHint": {
+    "message": "Examples: https://app.example.com/*, https://github.com/*, *://*.example.org/*. Templates support {domain} and {container}."
+  },
+  "optionsPreviewLabel": {
+    "message": "Preview:"
+  },
+  "optionsPreviewTitle": {
+    "message": "Example Page"
+  },
+  "optionsRuleEnabledLabel": {
+    "message": "Enabled"
+  },
+  "optionsRuleMatchLabel": {
+    "message": "URL pattern"
+  },
+  "optionsRuleTemplateLabel": {
+    "message": "Prefix template"
+  },
+  "optionsRuleUpButton": {
+    "message": "Up"
+  },
+  "optionsRuleDownButton": {
+    "message": "Down"
+  },
+  "optionsRuleSaveButton": {
+    "message": "Save"
+  },
+  "optionsRuleDeleteButton": {
+    "message": "Delete"
   },
   "optionsSaved": {
     "message": "Saved."
+  },
+  "optionsValidationError": {
+    "message": "Enter a valid URL pattern and prefix template."
+  },
+  "optionsTemplateRequiredError": {
+    "message": "Enter a prefix template."
+  },
+  "optionsMatchPatternError_empty": {
+    "message": "Enter a URL pattern."
+  },
+  "optionsMatchPatternError_format": {
+    "message": "Use a Chrome match pattern such as https://github.com/* or *://*.example.com/*."
+  },
+  "optionsMatchPatternError_fileHost": {
+    "message": "File URL patterns must use file:///*."
+  },
+  "optionsMatchPatternError_host": {
+    "message": "The host can only contain letters, numbers, dots, hyphens, and *."
+  },
+  "optionsPermissionDenied": {
+    "message": "Host permission was not granted."
+  },
+  "optionsCurrentTabUnavailable": {
+    "message": "Could not create a rule from the current tab."
   }
 }

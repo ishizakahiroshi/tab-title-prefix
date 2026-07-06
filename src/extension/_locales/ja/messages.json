@@ -8,16 +8,103 @@
   "optionsTitle": {
     "message": "Tab Title Prefix — 設定"
   },
-  "optionsEnabledLabel": {
+  "optionsGlobalEnabledLabel": {
+    "message": "タブタイトルのプレフィックスを有効化"
+  },
+  "optionsContainerSectionTitle": {
+    "message": "Firefox コンテナプレフィックス"
+  },
+  "optionsContainerEnabledLabel": {
     "message": "コンテナプレフィックスを有効化"
   },
-  "optionsFormatLabel": {
-    "message": "プレフィックスの書式"
+  "optionsContainerTemplateLabel": {
+    "message": "コンテナプレフィックスのテンプレート"
   },
-  "optionsFormatHint": {
-    "message": "{name} はコンテナ名に置き換わるプレースホルダーです。"
+  "optionsContainerTemplateHint": {
+    "message": "{container} はコンテナ名に置き換わるプレースホルダーです。"
+  },
+  "optionsUrlRulesSectionTitle": {
+    "message": "URL ルール"
+  },
+  "optionsUrlRulesEnabledLabel": {
+    "message": "URL ルールを有効化"
+  },
+  "optionsNoRules": {
+    "message": "URL ルールはまだありません。"
+  },
+  "optionsUseCurrentTabButton": {
+    "message": "現在のタブを使う"
+  },
+  "optionsNewRuleMatchLabel": {
+    "message": "URL パターン"
+  },
+  "optionsNewRuleTemplateLabel": {
+    "message": "プレフィックステンプレート"
+  },
+  "optionsRuleMatchPlaceholder": {
+    "message": "https://github.com/*"
+  },
+  "optionsRuleTemplatePlaceholder": {
+    "message": "[GH] "
+  },
+  "optionsAddRuleButton": {
+    "message": "ルールを追加"
+  },
+  "optionsUrlRulesHint": {
+    "message": "例: https://app.example.com/*, https://github.com/*, *://*.example.org/*。テンプレートでは {domain} と {container} が使えます。"
+  },
+  "optionsPreviewLabel": {
+    "message": "プレビュー:"
+  },
+  "optionsPreviewTitle": {
+    "message": "Example Page"
+  },
+  "optionsRuleEnabledLabel": {
+    "message": "有効"
+  },
+  "optionsRuleMatchLabel": {
+    "message": "URL パターン"
+  },
+  "optionsRuleTemplateLabel": {
+    "message": "プレフィックステンプレート"
+  },
+  "optionsRuleUpButton": {
+    "message": "上へ"
+  },
+  "optionsRuleDownButton": {
+    "message": "下へ"
+  },
+  "optionsRuleSaveButton": {
+    "message": "保存"
+  },
+  "optionsRuleDeleteButton": {
+    "message": "削除"
   },
   "optionsSaved": {
     "message": "保存しました。"
+  },
+  "optionsValidationError": {
+    "message": "有効な URL パターンとプレフィックステンプレートを入力してください。"
+  },
+  "optionsTemplateRequiredError": {
+    "message": "プレフィックステンプレートを入力してください。"
+  },
+  "optionsMatchPatternError_empty": {
+    "message": "URL パターンを入力してください。"
+  },
+  "optionsMatchPatternError_format": {
+    "message": "https://github.com/* や *://*.example.com/* のような Chrome match pattern 形式で入力してください。"
+  },
+  "optionsMatchPatternError_fileHost": {
+    "message": "file URL のパターンは file:///* を使ってください。"
+  },
+  "optionsMatchPatternError_host": {
+    "message": "host には英数字、ドット、ハイフン、* のみ使えます。"
+  },
+  "optionsPermissionDenied": {
+    "message": "ホスト権限が許可されませんでした。"
+  },
+  "optionsCurrentTabUnavailable": {
+    "message": "現在のタブからルールを作成できませんでした。"
   }
 }

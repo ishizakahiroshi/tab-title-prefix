@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Tab Title Prefix デモ</title>
+<style>
+  html, body { margin: 0; padding: 0; }
+  body { background: #eef2f7; }
+  .frame {
+    width: 1280px; height: 720px; box-sizing: border-box; overflow: hidden;
+    padding: 44px 64px 38px; color: #162231;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    background:
+      radial-gradient(circle at 88% 18%, rgba(98, 111, 255, .14), transparent 28%),
+      #eef2f7;
+  }
+  .eyebrow { color: #526071; font-size: 22px; font-weight: 800; letter-spacing: .02em; }
+  h1 { margin: 8px 0 30px; font-size: 44px; line-height: 1.08; }
+  .layout { display: grid; grid-template-columns: 1.45fr .95fr; gap: 30px; align-items: stretch; }
+  .panel { background: rgba(255,255,255,.82); border: 2px solid #d7dee8; border-radius: 16px; padding: 24px; }
+  .section-title { color: #526071; font-size: 22px; font-weight: 800; margin-bottom: 14px; }
+  .tabbar { display: flex; gap: 8px; margin-bottom: 26px; }
+  .tab {
+    flex: 1; min-width: 0; background: #fff; border: 2px solid #1d2a3a;
+    border-bottom-width: 7px; border-radius: 11px 11px 3px 3px;
+    padding: 14px 14px 13px; font-size: 20px; white-space: nowrap;
+  }
+  .tab.blue { border-bottom-color: #2f6fb0; }
+  .tab.orange { border-bottom-color: #c2740f; }
+  .tab.green { border-bottom-color: #4d8a4a; }
+  .prefix { color: #2f6fb0; font-weight: 900; }
+  .arrow { color: #2f6fb0; font-size: 30px; font-weight: 900; text-align: center; margin: -14px 0 8px; }
+  .rules { display: grid; gap: 12px; }
+  .rule { background: #fff; border: 2px solid #d7dee8; border-radius: 12px; padding: 14px 16px; }
+  .rule strong { color: #e01945; }
+  .muted { color: #5e6b7b; }
+  .preview { background: #16245a; color: #fff; border-radius: 12px; padding: 15px 17px; font-size: 22px; font-weight: 800; }
+  .footer { margin-top: 26px; background: #2f6fb0; color: #fff; border-radius: 999px; padding: 15px 22px; text-align: center; font-size: 22px; font-weight: 800; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="eyebrow">合成データの例です。実サイト名や実データは使っていません</div>
+  <h1>似たタイトルのタブを、ひと目で見分ける</h1>
+  <div class="layout">
+    <div class="panel">
+      <div class="section-title">Before</div>
+      <div class="tabbar">
+        <div class="tab blue">Dashboard</div>
+        <div class="tab orange">Dashboard</div>
+        <div class="tab green">Dashboard</div>
+      </div>
+      <div class="arrow">↓</div>
+      <div class="section-title">After</div>
+      <div class="tabbar">
+        <div class="tab blue"><span class="prefix">[個人]</span> Dashboard</div>
+        <div class="tab orange"><span class="prefix">[仕事]</span> Dashboard</div>
+        <div class="tab green"><span class="prefix">[検証]</span> Dashboard</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="section-title">v0.2.0 の URL ルール</div>
+      <div class="rules">
+        <div class="rule"><span class="muted">URL パターン</span><br><strong>https://app.example.com/*</strong></div>
+        <div class="rule"><span class="muted">プレフィックス</span><br><strong>[APP]</strong></div>
+        <div class="preview">[仕事] [APP] Dashboard</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">コンテナ名や URL ルールのプレフィックスを、タブタイトルの先頭に表示します</div>
+</div>
+</body>
+</html>

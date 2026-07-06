@@ -4,10 +4,18 @@
 <meta charset="utf-8">
 <title>Tab Title Prefix</title>
 <style>
-  body { font-family: system-ui, sans-serif; margin: 16px; max-width: 480px; }
+  body { font-family: system-ui, sans-serif; margin: 16px; max-width: 720px; }
   label { display: block; margin-bottom: 12px; }
   input[type="text"] { width: 100%; box-sizing: border-box; margin-top: 4px; }
+  fieldset { border: 1px solid #ddd; border-radius: 6px; margin: 16px 0; padding: 12px; }
+  legend { font-weight: 600; }
+  button { margin-right: 8px; }
+  .rule { border-top: 1px solid #ddd; padding: 12px 0; }
+  .rule-actions { margin-top: 8px; }
+  .new-rule { display: grid; gap: 8px; }
+  .preview { background: #f7f7f7; border-radius: 6px; padding: 8px; }
   .hint { color: #666; font-size: 0.85em; margin-top: 4px; }
+  .error { color: #b00020; }
   #status { margin-top: 12px; color: #2a7; min-height: 1.2em; }
 </style>
 </head>
@@ -15,14 +23,79 @@
   <h1 data-i18n="optionsTitle"></h1>
   <label>
     <input type="checkbox" id="enabled">
-    <span data-i18n="optionsEnabledLabel"></span>
+    <span data-i18n="optionsGlobalEnabledLabel"></span>
   </label>
-  <label>
-    <span data-i18n="optionsFormatLabel"></span>
-    <input type="text" id="format">
-    <div class="hint" data-i18n="optionsFormatHint"></div>
-  </label>
+
+  <fieldset>
+    <legend data-i18n="optionsContainerSectionTitle"></legend>
+    <label>
+      <input type="checkbox" id="containerEnabled">
+      <span data-i18n="optionsContainerEnabledLabel"></span>
+    </label>
+    <label>
+      <span data-i18n="optionsContainerTemplateLabel"></span>
+      <input type="text" id="containerTemplate">
+      <div class="hint" data-i18n="optionsContainerTemplateHint"></div>
+    </label>
+  </fieldset>
+
+  <fieldset>
+    <legend data-i18n="optionsUrlRulesSectionTitle"></legend>
+    <label>
+      <input type="checkbox" id="urlRulesEnabled">
+      <span data-i18n="optionsUrlRulesEnabledLabel"></span>
+    </label>
+    <div id="rules"></div>
+    <p id="emptyRules" class="hint" data-i18n="optionsNoRules"></p>
+    <div class="new-rule">
+      <button type="button" id="useCurrentTab" data-i18n="optionsUseCurrentTabButton"></button>
+      <label>
+        <span data-i18n="optionsNewRuleMatchLabel"></span>
+        <input type="text" id="newRuleMatch" data-i18n-placeholder="optionsRuleMatchPlaceholder">
+        <div id="newRuleMatchError" class="hint error"></div>
+      </label>
+      <label>
+        <span data-i18n="optionsNewRuleTemplateLabel"></span>
+        <input type="text" id="newRuleTemplate" data-i18n-placeholder="optionsRuleTemplatePlaceholder">
+      </label>
+      <div class="preview">
+        <strong data-i18n="optionsPreviewLabel"></strong>
+        <span id="newRulePreview"></span>
+      </div>
+      <button type="button" id="addRule" data-i18n="optionsAddRuleButton"></button>
+      <div class="hint" data-i18n="optionsUrlRulesHint"></div>
+    </div>
+  </fieldset>
+
   <div id="status"></div>
+  <template id="ruleTemplate">
+    <section class="rule">
+      <label>
+        <input type="checkbox" class="rule-enabled">
+        <span class="rule-enabled-label"></span>
+      </label>
+      <label>
+        <span class="rule-match-label"></span>
+        <input type="text" class="rule-match">
+        <div class="rule-match-error hint error"></div>
+      </label>
+      <label>
+        <span class="rule-template-label"></span>
+        <input type="text" class="rule-template">
+      </label>
+      <div class="preview">
+        <strong class="rule-preview-label"></strong>
+        <span class="rule-preview"></span>
+      </div>
+      <div class="rule-actions">
+        <button type="button" class="rule-up"></button>
+        <button type="button" class="rule-down"></button>
+        <button type="button" class="rule-save"></button>
+        <button type="button" class="rule-delete"></button>
+      </div>
+    </section>
+  </template>
+  <script src="settings.js"></script>
   <script src="options.js"></script>
 </body>
 </html>

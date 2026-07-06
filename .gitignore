@@ -18,6 +18,7 @@ desktop.ini
 # === AI ツールのローカル状態（トークンを含む可能性あり） ===
 .claude/
 .codex-tmp/
+.docsweep/
 
 # === ローカル/プライベート追記（fresh public clone から除外） ===
 .env

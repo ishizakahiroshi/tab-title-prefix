@@ -28,12 +28,13 @@ Firefox の Multi-Account Containers で複数アカウントを同時に開い�
 ## ディレクトリ構成
 
 - `docs/local/` — 計画・設計ドキュメント（`plan_mvp.md` が正典・非公開）
-- `src/extension/` — 拡張本体（manifest.json / content.js / service_worker.js / options.html・js / _locales / img）※ Phase 1 実装済み（v0.1.0 を AMO 提出済み）
+- `src/extension/` — 拡張本体（manifest.firefox.json / manifest.chrome.json / settings.js / content.js / service_worker.js / options.html・js / _locales / img）
 
 ## 主要コマンド
 
-- Firefox に一時読み込み: `about:debugging` → 「一時的なアドオンを読み込む」→ `src/extension/manifest.json`
-- AMO 提出用 xpi 生成: `pwsh scripts/build_firefox.ps1`（`dist/` に出力・gitignored）
+- Firefox に一時読み込み: `pwsh scripts/build.ps1 -Browser firefox` → `about:debugging` → 「一時的なアドオンを読み込む」→ `build/packages/firefox/manifest.json`
+- Chrome に一時読み込み: `pwsh scripts/build.ps1 -Browser chrome` → `chrome://extensions` → Developer mode → Load unpacked → `build/packages/chrome`
+- AMO/CWS 提出用 package 生成: `pwsh scripts/build.ps1`（`dist/` に出力・gitignored）
 - 構文チェック: `Get-ChildItem src/extension/*.js | ForEach-Object { node --check $_.FullName }`（PowerShell。glob は node 側で展開されないため個別に渡す）
 - secrets-scan 手動実行: `node scripts/secrets-scan.mjs --staged --block`
 
