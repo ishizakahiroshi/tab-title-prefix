@@ -25,29 +25,6 @@
     });
   }
 
-  function escapeRegExp(value) {
-    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  }
-
-  function patternToRegExp(pattern) {
-    if (!TTPSettings.validateMatchPattern(pattern)) return null;
-    const schemeSplit = pattern.split("://");
-    const scheme = schemeSplit[0];
-    const rest = schemeSplit.slice(1).join("://");
-    const slashIndex = rest.indexOf("/");
-    const host = rest.slice(0, slashIndex);
-    const path = rest.slice(slashIndex);
-    const schemePart = scheme === "*" ? "https?" : escapeRegExp(scheme);
-    const hostPart = host === "*" ? "[^/]*" : escapeRegExp(host).replaceAll("\\*", "[^/]*");
-    const pathPart = escapeRegExp(path).replaceAll("\\*", ".*");
-    return new RegExp(`^${schemePart}://${hostPart}${pathPart}$`);
-  }
-
-  function matchUrlRule(rule, url) {
-    const re = patternToRegExp(rule.match);
-    return re ? re.test(url) : false;
-  }
-
   function renderTemplate(template, context) {
     return template
       .replaceAll("{domain}", context.domain || "")
@@ -55,19 +32,21 @@
       .replaceAll("{name}", context.container || "");
   }
 
-  function computePrefix(settings, containerName) {
-    if (!settings.enabled) return "";
+  function computePrefix(currentSettings, currentContainerName) {
+    if (!currentSettings || !currentSettings.enabled) return "";
     const context = {
-      container: containerName || "",
+      container: currentContainerName || "",
       domain: location.hostname || "",
     };
     const parts = [];
-    if (settings.containerRule.enabled && containerName) {
-      parts.push(renderTemplate(settings.containerRule.template, context));
+    if (currentSettings.containerRule && currentSettings.containerRule.enabled && currentContainerName) {
+      parts.push(renderTemplate(currentSettings.containerRule.template, context));
     }
-    const matchedRule = settings.urlRulesEnabled === false
+    const matchedRule = currentSettings.urlRulesEnabled === false
       ? null
-      : settings.urlRules.find((rule) => rule.enabled && matchUrlRule(rule, location.href));
+      : (currentSettings.urlRules || []).find(
+        (rule) => rule.enabled && TTPSettings.urlMatchesPattern(location.href, rule.match),
+      );
     if (matchedRule) {
       parts.push(renderTemplate(matchedRule.template, context));
     }
@@ -75,12 +54,15 @@
   }
 
   function stripKnownPrefix(title) {
+    // Longest match first so a short prefix cannot leave a longer composite prefix half-stripped
+    // (e.g. known "[A] " and "[A] [B] " must not strip only "[A] " from "[A] [B] Page").
+    let best = "";
     for (const knownPrefix of knownPrefixes) {
-      if (knownPrefix && title.startsWith(knownPrefix)) {
-        return title.slice(knownPrefix.length);
+      if (knownPrefix && knownPrefix.length > best.length && title.startsWith(knownPrefix)) {
+        best = knownPrefix;
       }
     }
-    return title;
+    return best ? title.slice(best.length) : title;
   }
 
   function applyPrefix() {
@@ -102,6 +84,7 @@
   function watchNavigationChanges() {
     ["pushState", "replaceState"].forEach((methodName) => {
       const original = history[methodName];
+      if (typeof original !== "function") return;
       history[methodName] = function (...args) {
         const result = original.apply(this, args);
         queueMicrotask(refreshPrefix);
@@ -112,9 +95,44 @@
     window.addEventListener("hashchange", refreshPrefix);
   }
 
+  function watchTitleChanges() {
+    // Observe <head> (not only the current <title> node) so SPA replacements of the
+    // title element still get a prefix re-applied, without watching the whole document.
+    const root = document.head || document.documentElement;
+    if (!root) return;
+
+    let scheduled = false;
+    const schedule = () => {
+      if (scheduled) return;
+      scheduled = true;
+      queueMicrotask(() => {
+        scheduled = false;
+        applyPrefix();
+      });
+    };
+
+    new MutationObserver(schedule).observe(root, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+    });
+  }
+
+  function watchStorageChanges() {
+    const api = getApi();
+    if (!api || !api.storage || !api.storage.onChanged) return;
+    api.storage.onChanged.addListener((changes, area) => {
+      if (area && area !== "local") return;
+      // Reload full settings (normalize + migration) rather than patching keys.
+      TTPSettings.loadSettings().then((next) => {
+        settings = next;
+        refreshPrefix();
+      }).catch(() => {});
+    });
+  }
+
   async function init() {
     settings = await TTPSettings.loadSettings();
-    if (!settings.enabled) return;
 
     try {
       containerName = await sendMessage({ type: "getContainerName" });
@@ -122,13 +140,11 @@
       containerName = null;
     }
 
+    // Always wire listeners so re-enable / template edits apply without a full reload.
     refreshPrefix();
     watchNavigationChanges();
-
-    const titleEl = document.querySelector("title");
-    if (titleEl) {
-      new MutationObserver(refreshPrefix).observe(titleEl, { childList: true });
-    }
+    watchTitleChanges();
+    watchStorageChanges();
   }
 
   init();

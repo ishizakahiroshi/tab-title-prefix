@@ -42,8 +42,9 @@ function containsPermission(api, origin) {
 async function getGrantedUrlRuleMatches(settings) {
   const api = getApi();
   const matches = [];
-  if (!settings.enabled || settings.urlRulesEnabled === false) return matches;
-  for (const rule of settings.urlRules) {
+  if (!settings || !settings.enabled || settings.urlRulesEnabled === false) return matches;
+  const rules = settings.urlRules || [];
+  for (const rule of rules) {
     if (!rule.enabled || !TTPSettings.validateMatchPattern(rule.match)) continue;
     if (await containsPermission(api, rule.match)) {
       matches.push(rule.match);
@@ -52,9 +53,23 @@ async function getGrantedUrlRuleMatches(settings) {
   return [...new Set(matches)];
 }
 
-async function refreshDynamicContentScripts() {
+// Serialize dynamic content-script refreshes to avoid unregister/register races
+// when onInstalled / onStartup / permissions / options messages fire close together.
+let refreshChain = Promise.resolve();
+
+function refreshDynamicContentScripts() {
+  refreshChain = refreshChain
+    .then(() => refreshDynamicContentScriptsNow())
+    .catch(() => {});
+  return refreshChain;
+}
+
+async function refreshDynamicContentScriptsNow() {
   if (!isChromeDynamicContentScriptTarget()) return;
+  if (typeof TTPSettings === "undefined" || !TTPSettings.loadSettings) return;
   const api = getApi();
+  if (!api || !api.scripting) return;
+
   const scriptId = "url-rule-title-prefix";
   try {
     await api.scripting.unregisterContentScripts({ ids: [scriptId] });
@@ -99,12 +114,14 @@ if (api && api.permissions && api.permissions.onRemoved) {
   });
 }
 
-api.runtime.onMessage.addListener((message, sender) => {
-  if (!message) return;
-  if (message.type === "getContainerName") {
-    return getContainerName(sender.tab);
-  }
-  if (message.type === "urlRulesChanged") {
-    refreshDynamicContentScripts();
-  }
-});
+if (api && api.runtime && api.runtime.onMessage) {
+  api.runtime.onMessage.addListener((message, sender) => {
+    if (!message) return;
+    if (message.type === "getContainerName") {
+      return getContainerName(sender && sender.tab);
+    }
+    if (message.type === "urlRulesChanged") {
+      refreshDynamicContentScripts();
+    }
+  });
+}

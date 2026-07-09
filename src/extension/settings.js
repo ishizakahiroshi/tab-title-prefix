@@ -135,19 +135,88 @@
     return `rule_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
   }
 
+  function isValidMatchHost(host) {
+    if (host === "*") return true;
+    // Chrome match-pattern host: either a concrete hostname, or "*." + hostname (no other *).
+    if (host.startsWith("*.")) {
+      const base = host.slice(2);
+      return base.length > 0 && !base.includes("*") && /^[A-Za-z0-9.-]+$/.test(base);
+    }
+    return !host.includes("*") && /^[A-Za-z0-9.-]+$/.test(host);
+  }
+
   function getMatchPatternError(pattern) {
     if (typeof pattern !== "string" || !pattern.trim()) return "empty";
     const value = pattern.trim();
-    const match = value.match(/^(\*|http|https|file):\/\/([^/]+|\*)\/.*$/);
+    const match = value.match(/^(\*|http|https|file):\/\/([^/]+|\*)\/(.*)$/);
     if (!match) return "format";
     if (match[1] === "file") return match[2] === "*" ? "" : "fileHost";
-    const host = match[2];
-    if (host !== "*" && !/^[A-Za-z0-9.*-]+$/.test(host)) return "host";
+    if (!isValidMatchHost(match[2])) return "host";
     return "";
   }
 
   function validateMatchPattern(pattern) {
     return !getMatchPatternError(pattern);
+  }
+
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function pathPatternToRegExp(pathPattern) {
+    let source = "";
+    for (const ch of pathPattern) {
+      source += ch === "*" ? ".*" : escapeRegExp(ch);
+    }
+    return new RegExp(`^${source}$`);
+  }
+
+  function hostMatchesPattern(hostname, hostPattern) {
+    const host = String(hostname || "").toLowerCase();
+    const pattern = String(hostPattern || "").toLowerCase();
+    if (pattern === "*") return true;
+    if (pattern.startsWith("*.")) {
+      const base = pattern.slice(2);
+      return host === base || host.endsWith(`.${base}`);
+    }
+    return host === pattern;
+  }
+
+  /**
+   * Match a URL string against a Chrome-style match pattern.
+   * Uses URL parsing so ports do not break host matching (unlike a full-URL regex).
+   * "*.example.com" matches the apex and any subdomain, per Chrome match-pattern rules.
+   */
+  function urlMatchesPattern(urlValue, pattern) {
+    if (!validateMatchPattern(pattern)) return false;
+    let url;
+    try {
+      url = new URL(urlValue);
+    } catch (e) {
+      return false;
+    }
+
+    const value = pattern.trim();
+    const schemeEnd = value.indexOf("://");
+    const scheme = value.slice(0, schemeEnd);
+    const rest = value.slice(schemeEnd + 3);
+    const slashIndex = rest.indexOf("/");
+    const hostPattern = rest.slice(0, slashIndex);
+    const pathPattern = rest.slice(slashIndex);
+
+    if (scheme === "*") {
+      if (url.protocol !== "http:" && url.protocol !== "https:") return false;
+    } else if (url.protocol !== `${scheme}:`) {
+      return false;
+    }
+
+    if (scheme === "file") {
+      // file:///* — host is always empty in practice; path is the local path.
+      return pathPatternToRegExp(pathPattern).test(`${url.pathname}${url.search}`);
+    }
+
+    if (!hostMatchesPattern(url.hostname, hostPattern)) return false;
+    return pathPatternToRegExp(pathPattern).test(`${url.pathname}${url.search}`);
   }
 
   function createPatternFromUrl(urlValue) {
@@ -170,6 +239,7 @@
     loadSettings,
     normalizeSettings,
     storageSet,
+    urlMatchesPattern,
     validateMatchPattern,
   };
 })(this);
