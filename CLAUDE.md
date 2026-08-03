@@ -15,6 +15,7 @@ Firefox の Multi-Account Containers で複数アカウントを同時に開い�
 - 多言語化（MVP は英語 + 日本語のみ）
 - webextension-polyfill / TypeScript / bundler の導入（規模が小さいうちは vanilla JS + MV3 のみ）
 - 有料化・寄付導線
+- Chrome ウェブストアへの公開（当面保留・2026-08-03 判断。固有価値である Multi-Account Containers 連携が Chrome に無く、汎用タブリネーム拡張は定番が複数あるため。Chrome 版はビルド可能な状態のみ維持し、必要になれば Unlisted 公開を検討）
 
 ## 技術スタック
 
