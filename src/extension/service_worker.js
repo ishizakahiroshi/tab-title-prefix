@@ -28,7 +28,10 @@ async function getContainerName(tab) {
 
 function isChromeDynamicContentScriptTarget() {
   const api = getApi();
-  return typeof chrome !== "undefined" && api && api.scripting && api.permissions;
+  // Firefox also defines `chrome`, so Chrome is detected by the absence of `browser`.
+  // Firefox uses the static content script declared in manifest.firefox.json instead.
+  if (typeof browser !== "undefined" || typeof chrome === "undefined") return false;
+  return Boolean(api && api.scripting && api.permissions);
 }
 
 function containsPermission(api, origin) {
@@ -111,6 +114,44 @@ if (api && api.permissions && api.permissions.onAdded) {
 if (api && api.permissions && api.permissions.onRemoved) {
   api.permissions.onRemoved.addListener(() => {
     refreshDynamicContentScripts();
+  });
+}
+
+function queryAllTabs() {
+  const tabsApi = api && api.tabs;
+  if (!tabsApi || !tabsApi.query) return Promise.resolve([]);
+  if (typeof browser !== "undefined") {
+    return tabsApi.query({}).catch(() => []);
+  }
+  return new Promise((resolve) => {
+    tabsApi.query({}, (tabs) => {
+      resolve(api.runtime && api.runtime.lastError ? [] : (tabs || []));
+    });
+  });
+}
+
+// Renaming a container never touches storage, so open tabs would keep the old name in
+// their prefix. Tell them to re-read it. No extra permission is needed: tabs.query works
+// without the "tabs" permission for ids, and tabs.sendMessage rides on host permissions.
+async function broadcastContainerChanged() {
+  if (!api || !api.tabs || !api.tabs.sendMessage) return;
+  const tabs = await queryAllTabs();
+  for (const tab of tabs) {
+    if (!tab || typeof tab.id !== "number") continue;
+    try {
+      const result = api.tabs.sendMessage(tab.id, { type: "containerChanged" });
+      if (result && typeof result.catch === "function") {
+        result.catch(() => {});
+      }
+    } catch (e) {
+      // Tabs without our content script (or restricted pages) have no receiver.
+    }
+  }
+}
+
+if (api && api.contextualIdentities && api.contextualIdentities.onUpdated) {
+  api.contextualIdentities.onUpdated.addListener(() => {
+    broadcastContainerChanged();
   });
 }
 

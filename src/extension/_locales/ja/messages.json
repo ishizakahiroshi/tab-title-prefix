@@ -3,7 +3,7 @@
     "message": "Tab Title Prefix"
   },
   "extensionDescription": {
-    "message": "コンテナ名（Firefox）や URL ルール（Chrome, Phase 2）でタブタイトルにプレフィックスを付ける"
+    "message": "Firefox のコンテナ名や自分で決めた URL ルールで、タブタイトルの先頭にプレフィックスを付けて見分けやすくします。"
   },
   "optionsTitle": {
     "message": "Tab Title Prefix — 設定"

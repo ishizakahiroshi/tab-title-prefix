@@ -3,7 +3,7 @@
     "message": "Tab Title Prefix"
   },
   "extensionDescription": {
-    "message": "Prefix tab titles by container (Firefox) or URL rules (Chrome, Phase 2)"
+    "message": "Prefix tab titles with Firefox container names or your own URL rules, so similar tabs are easy to tell apart."
   },
   "optionsTitle": {
     "message": "Tab Title Prefix — Settings"

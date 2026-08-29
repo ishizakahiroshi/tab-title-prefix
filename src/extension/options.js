@@ -73,6 +73,10 @@ function requestPermission(request) {
 }
 
 function requestHostPermission(pattern) {
+  // Firefox defines `chrome` as well, so it cannot be used to tell the browsers apart.
+  // Firefox declares <all_urls> in host_permissions and injects the static content script,
+  // so no per-rule origin request is needed there; only Chrome uses optional_host_permissions.
+  if (typeof browser !== "undefined") return Promise.resolve(true);
   if (typeof chrome === "undefined" || !chrome.permissions) return Promise.resolve(true);
   if (!TTPSettings.validateMatchPattern(pattern)) return Promise.resolve(false);
   return requestPermission({ origins: [pattern] });

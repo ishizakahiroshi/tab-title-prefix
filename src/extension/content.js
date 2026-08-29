@@ -2,6 +2,7 @@
   let settings = null;
   let containerName = null;
   let prefix = "";
+  let lastUrl = location.href;
   const knownPrefixes = new Set();
 
   function getApi() {
@@ -81,18 +82,19 @@
     applyPrefix();
   }
 
+  function refreshIfUrlChanged() {
+    if (location.href === lastUrl) return;
+    lastUrl = location.href;
+    refreshPrefix();
+  }
+
   function watchNavigationChanges() {
-    ["pushState", "replaceState"].forEach((methodName) => {
-      const original = history[methodName];
-      if (typeof original !== "function") return;
-      history[methodName] = function (...args) {
-        const result = original.apply(this, args);
-        queueMicrotask(refreshPrefix);
-        return result;
-      };
-    });
-    window.addEventListener("popstate", refreshPrefix);
-    window.addEventListener("hashchange", refreshPrefix);
+    // Content scripts run in an isolated world in both Firefox and Chrome, so patching
+    // history.pushState here would never observe the page's own calls. Instead compare
+    // location on the events we do receive (popstate / hashchange) and on head mutations,
+    // which an SPA triggers when it swaps the document title after a route change.
+    window.addEventListener("popstate", refreshIfUrlChanged);
+    window.addEventListener("hashchange", refreshIfUrlChanged);
   }
 
   function watchTitleChanges() {
@@ -107,6 +109,9 @@
       scheduled = true;
       queueMicrotask(() => {
         scheduled = false;
+        // A route change may land here before popstate/hashchange (or without either),
+        // so re-evaluate the rules when the URL moved, then re-apply the prefix.
+        refreshIfUrlChanged();
         applyPrefix();
       });
     };
@@ -131,6 +136,20 @@
     });
   }
 
+  function watchContainerChanges() {
+    const api = getApi();
+    if (!api || !api.runtime || !api.runtime.onMessage) return;
+    api.runtime.onMessage.addListener((message) => {
+      // Renaming a container does not touch storage, so the background script tells
+      // open tabs to re-read the name instead of leaving a stale prefix behind.
+      if (!message || message.type !== "containerChanged") return;
+      sendMessage({ type: "getContainerName" }).then((name) => {
+        containerName = name;
+        refreshPrefix();
+      }).catch(() => {});
+    });
+  }
+
   async function init() {
     settings = await TTPSettings.loadSettings();
 
@@ -145,6 +164,7 @@
     watchNavigationChanges();
     watchTitleChanges();
     watchStorageChanges();
+    watchContainerChanges();
   }
 
   init();

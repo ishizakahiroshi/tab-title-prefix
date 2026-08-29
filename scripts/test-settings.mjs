@@ -92,6 +92,20 @@ assert(migrated.schemaVersion === 2, "migrate schemaVersion");
 assert(migrated.containerRule.template === "[{container}] ", "migrate {name} → {container}");
 assert(Array.isArray(migrated.urlRules) && migrated.urlRules.length === 0, "migrate clears urlRules");
 
+// schema version branching (F-14): a newer schema must not be run through the v1 migration
+const futureRaw = {
+  schemaVersion: 3,
+  enabled: true,
+  containerRule: { enabled: true, template: "[{container}] " },
+  urlRulesEnabled: true,
+  urlRules: [{ id: "r1", enabled: true, match: "https://example.com/*", template: "[X] " }],
+};
+const future = TTPSettings.normalizeSettings(futureRaw);
+assert(future.urlRules.length === 1, "newer schema keeps urlRules");
+assert(TTPSettings.getSchemaVersion(futureRaw) === 3, "newer schema version is read as-is");
+assert(TTPSettings.getSchemaVersion({ enabled: true, format: "[{name}] " }) === 1, "missing schemaVersion is v1");
+assert(TTPSettings.getSchemaVersion({ schemaVersion: "2" }) === 1, "non-numeric schemaVersion is v1");
+
 if (failed) {
   console.error(`\n${failed} assertion(s) failed`);
   process.exit(1);

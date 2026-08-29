@@ -8,6 +8,8 @@
 - Added prefix preview and clearer validation messages for URL match patterns.
 - Added "use current tab" support for generating a URL rule pattern from the active tab.
 - Migrated settings to schema v2 while preserving the v0.1.0 container prefix behavior.
+- URL rules are now re-evaluated when a single-page app changes route.
+- Renaming a container now updates the prefix in already-open tabs.
 - Split extension manifests for Firefox and Chrome.
 - Chrome now registers content scripts dynamically for granted URL rule hosts instead of requiring all-site host access at install time.
 - Added a shared build script for Firefox xpi and Chrome zip packages.

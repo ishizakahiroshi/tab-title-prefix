@@ -80,23 +80,26 @@
     };
   }
 
-  function normalizeSettings(raw) {
-    const defaults = cloneDefaultSettings();
-    if (!raw || typeof raw !== "object") return defaults;
+  function getSchemaVersion(raw) {
+    // Anything without a usable schemaVersion is v1 (the v0.1.0 flat {enabled, format} shape).
+    const version = raw && typeof raw.schemaVersion === "number" ? raw.schemaVersion : 1;
+    return Number.isFinite(version) && version >= 1 ? version : 1;
+  }
 
-    if (raw.schemaVersion !== SCHEMA_VERSION) {
-      return {
-        schemaVersion: SCHEMA_VERSION,
+  function migrateFromV1(raw) {
+    return {
+      schemaVersion: SCHEMA_VERSION,
+      enabled: raw.enabled !== false,
+      containerRule: {
         enabled: raw.enabled !== false,
-        containerRule: {
-          enabled: raw.enabled !== false,
-          template: cleanTemplate(raw.format, DEFAULT_CONTAINER_TEMPLATE).replaceAll("{name}", "{container}"),
-        },
-        urlRulesEnabled: true,
-        urlRules: [],
-      };
-    }
+        template: cleanTemplate(raw.format, DEFAULT_CONTAINER_TEMPLATE).replaceAll("{name}", "{container}"),
+      },
+      urlRulesEnabled: true,
+      urlRules: [],
+    };
+  }
 
+  function readCurrentSchema(raw) {
     const urlRules = Array.isArray(raw.urlRules) ? raw.urlRules.map(cleanRule).filter(Boolean) : [];
     return {
       schemaVersion: SCHEMA_VERSION,
@@ -113,6 +116,15 @@
     };
   }
 
+  function normalizeSettings(raw) {
+    if (!raw || typeof raw !== "object") return cloneDefaultSettings();
+    // Branch on the version explicitly. Only older schemas are migrated; a newer one
+    // (e.g. after downgrading the extension) is read with the fields this version knows,
+    // so its urlRules survive instead of being wiped by the v1 migration path.
+    if (getSchemaVersion(raw) < SCHEMA_VERSION) return migrateFromV1(raw);
+    return readCurrentSchema(raw);
+  }
+
   async function loadSettings() {
     let raw = {};
     try {
@@ -121,7 +133,9 @@
       raw = {};
     }
     const settings = normalizeSettings(raw);
-    if (!raw || raw.schemaVersion !== SCHEMA_VERSION) {
+    // Persist only when an actual migration happened. Writing back over a newer schema
+    // would destroy fields this version does not understand.
+    if (!raw || typeof raw !== "object" || getSchemaVersion(raw) < SCHEMA_VERSION) {
       try {
         await storageSet(settings);
       } catch (e) {
@@ -236,6 +250,7 @@
     createRuleId,
     createPatternFromUrl,
     getMatchPatternError,
+    getSchemaVersion,
     loadSettings,
     normalizeSettings,
     storageSet,
