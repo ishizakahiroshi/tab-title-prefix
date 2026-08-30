@@ -9,7 +9,7 @@ short:
   ja: "コンテナ（Firefox）や URL ルール（Chrome）でタブのタイトルに接頭辞を付ける拡張。"
   en: "Prefix tab titles by container (Firefox) or URL rules (Chrome)."
 tech: ["JavaScript", "WebExtension"]
-store: null
+store: "https://addons.mozilla.org/ja/firefox/addon/tab-title-prefix/"
 live: null
 guide: null
 featured: false
