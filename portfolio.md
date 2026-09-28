@@ -1,4 +1,11 @@
 ---
+cover:
+  path: portfolio/overview-2026-09-28.jpg
+  alt: {ja: "tab-title-prefix の紹介動画", en: "tab-title-prefix overview video"}
+video:
+  provider: youtube
+  id: "Vn22xjjZt70"
+  durationSeconds: 20
 schemaVersion: 1
 color: "#8a63c9"
 initials: "tt"
