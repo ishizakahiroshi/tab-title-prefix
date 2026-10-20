@@ -37,7 +37,7 @@ Firefox の Multi-Account Containers で複数アカウントを同時に開い�
 - Chrome に一時読み込み: `pwsh scripts/build.ps1 -Browser chrome` → `chrome://extensions` → Developer mode → Load unpacked → `build/packages/chrome`
 - AMO/CWS 提出用 package 生成: `pwsh scripts/build.ps1`（`dist/` に出力・gitignored）
 - 構文チェック: `Get-ChildItem src/extension/*.js | ForEach-Object { node --check $_.FullName }`（PowerShell。glob は node 側で展開されないため個別に渡す）
-- secrets-scan 手動実行: `node scripts/secrets-scan.mjs --staged --block`
+- secrets-scan 手動実行（doxguard）: `node scripts/secrets-scan.dual.mjs --native-only --staged`
 
 ## AI 作業共通ルール
 
@@ -47,8 +47,8 @@ Firefox の Multi-Account Containers で複数アカウントを同時に開い�
 
 - Phase 1 は Firefox のみに絞る。Chrome 対応・URL ルール機能は Phase 2（`docs/local/plan_mvp.md` C4/C5）まで持ち込まない
 - 内部データ構造は最初から「ルールの配列」で持ち、Phase 2 拡張を見据える
-- secrets-scan の手動実行は `node scripts/secrets-scan.mjs --staged --block`（layer 2 pre-commit hook / layer 3 GitHub Actions `secrets-scan.yml` 配線済み）
-- secrets-scan の full coverage には env `KB_ROOT` / `FAMILY_ROOT` が必要（未設定なら構造 regex のみで継続。設定詳細は `scripts/secrets-scan.mjs` の冒頭コメント）
+- secrets-scan の手動実行は `node scripts/secrets-scan.dual.mjs --native-only --staged`（doxguard。layer 3 GitHub Actions `secrets-scan.yml` は doxguard と gitleaks で配線済み）
+- full coverage は作者環境の gitignored な私的設定を `DOXGUARD_CONFIG` で参照する（未設定なら構造 regex のみで継続）
 
 ## 関連ドキュメント
 
